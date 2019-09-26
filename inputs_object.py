@@ -32,9 +32,16 @@ def dataset_reader(filename_queue, config):  # prev name: CamVid_reader
 
     # decodes a png image into a uint8 or uint16 tensor
     # returns a tensor of type dtype with shape [height, width, depth]
-    image_bytes = tf.image.decode_png(imageValue)
-    label_bytes = tf.image.decode_png(labelValue)  # Labels are png, not jpeg
-
+    image_bytes = tf.image.decode_jpeg(imageValue)
+    '''
+    for img in image_bytes:
+        img=np.stack((img,)*3, axis=-1)
+        '''
+    label_bytes = tf.image.decode_jpeg(labelValue)  # Labels are png, not jpeg
+    '''
+    for img in image_bytes:
+        img=np.stack((img,)*3, axis=-1)
+    '''
     image = tf.reshape(image_bytes, (config["INPUT_HEIGHT"], config["INPUT_WIDTH"], config["INPUT_CHANNELS"]))
     label = tf.reshape(label_bytes, (config["INPUT_HEIGHT"], config["INPUT_WIDTH"], 1))
 

@@ -20,13 +20,13 @@ class SegNet:
 
         self.num_classes = self.config["NUM_CLASSES"]
         self.use_vgg = self.config["USE_VGG"]
-
+        #self.use_vgg=False
         if self.use_vgg is False:
             self.vgg_param_dict = None
             print("No VGG path in config, so learning from scratch")
         else:
             self.vgg16_npy_path = self.config["VGG_FILE"]
-            self.vgg_param_dict = np.load(self.vgg16_npy_path, encoding='latin1').item()
+            self.vgg_param_dict = np.load(self.vgg16_npy_path, encoding='latin1',allow_pickle=True).item()
             print("VGG parameter loaded")
 
         self.train_file = self.config["TRAIN_FILE"]
@@ -205,8 +205,7 @@ class SegNet:
                 self.images_val, self.labels_val = dataset_inputs(val_image_filename, val_label_filename, batch_size,
                                                                   self.config)
 
-            loss, accuracy, prediction = cal_loss(logits=self.logits, labels=self.labels_pl,
-                                                     number_class=self.num_classes)
+            loss, accuracy, prediction = cal_loss(logits=self.logits, labels=self.labels_pl)
             train, global_step = train_op(total_loss=loss, opt=self.opt)
 
             summary_op = tf.summary.merge_all()
